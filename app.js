@@ -5,7 +5,13 @@ const app = express();
 
 app.use(parser.json());
 
+
+
 app.listen(port, () => {
     console.log("listennng on :",
         port)
 });
+
+app.get("/", (res, req, next) => {
+    console.log("First get")
+})
