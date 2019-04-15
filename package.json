@@ -1,0 +1,24 @@
+{
+  "name": "graphql_nodejs_react",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BouzianeL3/GraphQLnodeJsReact.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BouzianeL3/GraphQLnodeJsReact/issues"
+  },
+  "homepage": "https://github.com/BouzianeL3/GraphQLnodeJsReact#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "nodeman": "^1.1.2"
+  }
+}
