@@ -6,7 +6,7 @@ const {
 } = require('graphql');
 const port = 5000;
 const app = express();
-
+const mongoose = require("mongoose");
 app.use(parser.json());
 
 const cours = [];
@@ -62,11 +62,18 @@ app.use('/graphql', graphqlhttp({
 
 }));
 
-app.listen(port, () => {
-    console.log("listennng on :",
-        port)
-});
+
 
 app.get("/", (res, req, next) => {
     console.log("First get")
 })
+
+mongoose.connect(`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@courses-130w2.mongodb.net/test?retryWrites=true`)
+    .then(() => {
+        app.listen(port, () => {
+            console.log("listennng on :",
+                port)
+        });
+    }).catch(err => {
+        console.log(err);
+    })
