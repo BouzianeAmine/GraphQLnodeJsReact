@@ -9,16 +9,29 @@ const app = express();
 
 app.use(parser.json());
 
+const cours = [];
 
 app.use('/graphql', graphqlhttp({
     schema: buildSchema(`
 
+        type Cours {
+            _id: ID!
+            title:String!
+            note:String!
+            date: String
+        }
+
+        input CoursInput {
+            title: String!
+            note: String!
+        }
+
         type RootQuery {
-            cours:[String!]!
+            cours:[Cours!]!
         }
 
         type RootMutation{
-            createCours(name:String): String
+            createCours(coursinput: CoursInput): Cours
 
         }
 
@@ -29,12 +42,18 @@ app.use('/graphql', graphqlhttp({
     `),
     rootValue: {
         cours: () => {
-            return ['Math', 'Java', 'Anglais'];
+            return cours;
         },
 
         createCours: (args) => {
-            const name = args.name;
-            return name;
+            const cour = {
+                _id: Math.random().toString(),
+                title: args.coursinput.title,
+                note: args.coursinput.note,
+                date: Date.now().toString()
+            }
+            cours.push(cour);
+            return cour;
         }
 
     },
