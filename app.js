@@ -7,9 +7,9 @@ const {
 const port = 5000;
 const app = express();
 const mongoose = require("mongoose");
+const Cours = require("./models/cours");
 app.use(parser.json());
 
-const cours = [];
 
 app.use('/graphql', graphqlhttp({
     schema: buildSchema(`
@@ -42,18 +42,32 @@ app.use('/graphql', graphqlhttp({
     `),
     rootValue: {
         cours: () => {
-            return cours;
+            return Cours.find().then(courses => {
+                return courses.map(cours => {
+                    return {
+                        ...cours._doc,
+                        _id: cours._doc._id.toString() //cette ligne est faites juste pour caster le id renvoie au debut ...cours_doc
+                    }
+                })
+            }).catch(err => {
+                console.log(err)
+            });
         },
 
         createCours: (args) => {
-            const cour = {
-                _id: Math.random().toString(),
+            const cour = new Cours({
                 title: args.coursinput.title,
                 note: args.coursinput.note,
-                date: Date.now().toString()
-            }
-            cours.push(cour);
-            return cour;
+                date: Date.now()
+            })
+            return cour.save().then(res => {
+                console.log(res);
+            }).catch(err => {
+                console.error(err);
+            });
+            return {
+                ...cour._doc
+            };
         }
 
     },

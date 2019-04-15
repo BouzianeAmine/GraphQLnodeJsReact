@@ -1,6 +1,7 @@
 {
     "env": {
         "MONGO_USER": "amine",
-        "MONGO_PASSWORD": "159951"
+        "MONGO_PASSWORD": "159951",
+        "MONGO_DB": "cours"
     }
 }
