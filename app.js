@@ -4,10 +4,13 @@ const graphqlhttp = require("express-graphql");
 const {
     buildSchema
 } = require('graphql');
+const bcrypt = require("bcryptjs");
 const port = 5000;
 const app = express();
 const mongoose = require("mongoose");
 const Cours = require("./models/cours");
+const User = require("./models/user");
+
 app.use(parser.json());
 
 
@@ -21,6 +24,17 @@ app.use('/graphql', graphqlhttp({
             date: String
         }
 
+        type User{
+            _id: ID!
+            email: String!
+            password: String
+        }
+
+        input UserInput{
+            email: String!
+            password: String!
+        }
+
         input CoursInput {
             title: String!
             note: String!
@@ -32,7 +46,7 @@ app.use('/graphql', graphqlhttp({
 
         type RootMutation{
             createCours(coursinput: CoursInput): Cours
-
+            createUser(userinput: UserInput) : User
         }
 
         schema {
@@ -68,6 +82,22 @@ app.use('/graphql', graphqlhttp({
             return {
                 ...cour._doc
             };
+        },
+
+        createUser: (args) => {
+            return bcrypt.hash(args.userinput.password, 12).then(hashedpass => {
+                const user = new User({
+                    email: args.userinput.email,
+                    password: hashedpass
+                });
+                return user.save();
+            }).then(user => {
+                console.log(user._doc);
+                return {
+                    ...user._doc
+                }
+            }).catch(err => console.error(err));
+
         }
 
     },
