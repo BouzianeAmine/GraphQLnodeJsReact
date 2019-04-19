@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# Comment
+
+read -p "Your comment for this commit : " com
+
+read -p "What branch : " branch
+
+echo $com
+
+git add .
+
+git commit -m $com
+
+git push origin -u $branch

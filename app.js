@@ -72,31 +72,41 @@ app.use('/graphql', graphqlhttp({
             const cour = new Cours({
                 title: args.coursinput.title,
                 note: args.coursinput.note,
-                date: Date.now()
+                date: Date.now(),
+                creator: '5cb8872a9c7dd55dc20ee193'
             })
-            return cour.save().then(res => {
-                console.log(res);
+            return cour.save().then(cour => {
+                console.log(cour._doc);
+                return {
+                    ...cour._doc
+                };
             }).catch(err => {
                 console.error(err);
             });
-            return {
-                ...cour._doc
-            };
         },
 
         createUser: (args) => {
-            return bcrypt.hash(args.userinput.password, 12).then(hashedpass => {
-                const user = new User({
-                    email: args.userinput.email,
-                    password: hashedpass
-                });
-                return user.save();
-            }).then(user => {
-                console.log(user._doc);
-                return {
-                    ...user._doc
-                }
-            }).catch(err => console.error(err));
+            return User.findOne({
+                    email: args.userinput.email
+                }).then((user) => {
+                    if (user) {
+                        throw new Error("This mail is already used");
+                    }
+                    return bcrypt.hash(args.userinput.password, 12);
+                })
+                .then(hashedpass => {
+                    const user = new User({
+                        email: args.userinput.email,
+                        password: hashedpass
+                    });
+                    return user.save();
+                }).then(user => {
+                    console.log(user._doc);
+                    return {
+                        ...user._doc,
+                        password: null
+                    }
+                }).catch(err => console.log(err));
 
         }
 
