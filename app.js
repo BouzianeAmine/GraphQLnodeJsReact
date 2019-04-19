@@ -67,19 +67,27 @@ app.use('/graphql', graphqlhttp({
                 console.log(err)
             });
         },
-
         createCours: (args) => {
             const cour = new Cours({
                 title: args.coursinput.title,
                 note: args.coursinput.note,
                 date: Date.now(),
                 creator: '5cb8872a9c7dd55dc20ee193'
-            })
+            });
+            let createdcours;
             return cour.save().then(cour => {
-                console.log(cour._doc);
-                return {
+                createdcours = {
                     ...cour._doc
                 };
+                return User.findById(cour._doc.creator);
+            }).then(user => {
+                if (!user) {
+                    throw new Error('User does not exist');
+                }
+                user.courses.push(cour);
+                return user.save();
+            }).then(res => {
+                return createdcours;
             }).catch(err => {
                 console.error(err);
             });
