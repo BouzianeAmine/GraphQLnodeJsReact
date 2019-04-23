@@ -2,8 +2,13 @@ const bcrypt = require("bcryptjs");
 const Cours = require("../models/cours");
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
+
+
 module.exports = {
-    cours: () => {
+    cours: (req) => {
+        if (!req.isAuth) {
+            throw new Error("Unauthenticated");
+        }
         return Cours.find().populate('creator').then(courses => {
             return courses.map(cours => {
                 return {
@@ -15,7 +20,10 @@ module.exports = {
             console.log(err)
         });
     },
-    createCours: (args) => {
+    createCours: (args, req) => {
+        if (!req.isAuth) {
+            throw new Error("Unauthenticated");
+        }
         const cour = new Cours({
             title: args.coursinput.title,
             note: args.coursinput.note,
