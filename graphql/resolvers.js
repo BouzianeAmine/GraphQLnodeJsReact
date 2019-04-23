@@ -88,6 +88,7 @@ module.exports = {
         }, "fgfg4r54r58r5g", {
             expiresIn: '1h'
         });
+
         return {
             userId: user.id,
             token: token
