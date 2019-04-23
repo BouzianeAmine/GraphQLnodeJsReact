@@ -2,6 +2,7 @@
     "env": {
         "MONGO_USER": "amine",
         "MONGO_PASSWORD": "159951",
-        "MONGO_DB": "cours"
+        "MONGO_DB": "cours",
+        "SEC_TOKEN": "65zef46e8zrf4er86f4vre8g74er"
     }
 }
